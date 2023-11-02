@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OneDrive直链生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #container {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>OneDrive直链生成器</h2>
+        <p>输入你的OneDrive单文件分享链接：</p>
+        <input type="text" id="inputUrl" placeholder="粘贴链接">
+        <button onclick="generateDirectLink()">生成直链</button>
+        <p id="outputLink"></p>
+    </div>
+
+    <script>
+        function generateDirectLink() {
+            var inputUrl = document.getElementById("inputUrl").value;
+            var outputLink = document.getElementById("outputLink");
+
+            try {
+                var p1 = inputUrl.match(/https:\/\/.+sharepoint\.com/)[0];
+                var p2 = inputUrl.match(/personal\/(\w+?)\//)[1];
+                var p3 = inputUrl.match(/.*\/(\S+)/)[1];
+
+                if (p3.includes('?')) {
+                    p3 = p3.match(/(\S+?)\?/)[1];
+                }
+
+                var reg4 = /com\/:(\w):/;
+                if (inputUrl.match(reg4)[1] == 'f') {
+                    outputLink.textContent = "抱歉，你所输入链接分享的是文件夹，直链生成仅对单文件有效。";
+                } else {
+                    outputLink.textContent = p1 + '/personal/' + p2 + '/_layouts/52/download.aspx?share=' + p3;
+                }
+            } catch (error) {
+                outputLink.textContent = "请检查你的输入链接是否正确？";
+            }
+        }
+    </script>
+</body>
+</html>
